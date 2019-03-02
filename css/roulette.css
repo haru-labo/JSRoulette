@@ -6,4 +6,17 @@
 
 #outflame div {
   border: solid 1px black;
+  text-align: center;
+}
+
+.selecting {
+  background-color: yellow;
+}
+
+.selected {
+  background-color: orange;
+}
+
+.inactive {
+  background-color: gray;
 }
