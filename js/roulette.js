@@ -18,20 +18,33 @@ function addBox() {
 
 //////////各ボタン処理//////////
 function start() {
+  //スタートボタンを非活性
+  $('#btnStart').prop('disabled', true);
   idRulette = setInterval(roulette, 100);
 }
 
 function stop() {
+  //スタートボタンを活性
+  $('#btnStart').prop('disabled', false);
   clearInterval(idRulette);
+  //選択したボックスをselectedへ
   $selectedBox = $('.selecting');
   $selectedBox.removeClass('selecting');
   $selectedBox.addClass('selected');
+  //選択できるボックスがなければスタートボタンを非活性
+  if($('.active').length === 0) {
+    $('#btnStart').prop('disabled', true);
+  }
 }
 
 function reset() {
+  //ルーレット動作中は停止
   if(idRulette !== undefined) {
     clearInterval(idRulette);
   }
+  //スタートボタンを活性
+  $('#btnStart').prop('disabled', false);
+  //全てのクラスをactiveへ
   let $resetTarget = $('.inactive, .selecting, .selected');
   $resetTarget.removeClass();
   $resetTarget.addClass('active');
@@ -45,18 +58,24 @@ function roulette() {
   let $activeBoxNum = $activeBox.length;
   let selectingNum = Math.floor(Math.random() * $activeBoxNum);
   let $targetBox = $activeBox.eq(selectingNum);
-  if ($selectedBox.length) {
+  //選択済みのものがあればInactiveにする
+  if($selectedBox.length) {
     $selectedBox.removeClass('selected');
     $selectedBox.addClass('inactive');
   }
-  $selectingBox.removeClass('selecting');
-  $selectingBox.addClass('active');
-  $targetBox.removeClass('active');
-  $targetBox.addClass('selecting');
+  
+  if($activeBox.length < 1) {
+    $targetBox.removeClass('active');
+    $targetBox.addClass('selecting');
+  } else {
+    $selectingBox.removeClass('selecting');
+    $selectingBox.addClass('active');
+    $targetBox.removeClass('active');
+    $targetBox.addClass('selecting');
+  }
 }
 
-
-
+//////////開始時処理//////////
 $(function() {
   addBox();
   $('#btnStart').click(start);
